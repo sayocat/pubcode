@@ -137,20 +137,20 @@ print(loss)
 print(acc)
 
 # Make sure to save the model
-sweets.save(‘./models/sweetsfromindia.keras')
+sweets.save('./models/sweetsfromindia.keras')
 
 # Get prediction ready
 y_pred = sweets.predict(x_test)
 
 # Select the image test file to perform online prediction
-y_pred = [0]
+y_pred[0]
 
 # Display the test image and get prediction together
 labels = '''gulab_jamun halwa kaju_katli kheer'''.split()
 image_number = 0
 plt.imshow(cv2.cvtColor(x_test[image_number], cv2.COLOR_BGR2RGB))
 n = np.array(x_test[image_number])
-p = n.reshape(1, 192, 192, 3)
+p = n.reshape(1, 128, 128, 3)
 predicted_label = labels[sweets.predict(p).argmax()]
 print("Predicted label is {}".format(predicted_label))
 
