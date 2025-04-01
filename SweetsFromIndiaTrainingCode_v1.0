@@ -17,7 +17,7 @@ print('DEVICES', device_lib.list_local_devices())
 
 # Define the paths to your datasets
 trainpath='./datasets/sweetsfromindia/train'
-testpath='./datasets/sweetsfromindia/test’
+testpath='./datasets/sweetsfromindia/test'
 
 # List the number of image files in your datasets
 for folder in os.listdir(trainpath):
@@ -27,7 +27,7 @@ for folder in os.listdir(testpath):
     files=gb.glob(pathname=str(testpath + '/'+folder + '/*.jpg'))
     print(f"numbers of images {len(files)} in {folder}")
 
-# Check the image size of each image files in your datasets
+# Check the image size of each image files in your datasets for training
 size=[]
 for folder in os.listdir(trainpath):
     files=gb.glob(pathname=str(trainpath + '/'+folder + '/*.jpg'))
@@ -35,13 +35,6 @@ for folder in os.listdir(trainpath):
         image=plt.imread(file)
         size.append(image.shape)
 pd.Series(size).value_counts()
-
-# Define the labels
-labels={' kajukatli':0,' gulabjamun':1 ,' Kheer’:2 ,' halwa’:3}
-def getcode(n):
-    for x,y in labels.items():
-        if n==y:
-            return x
 
 # Resize the image files to normalize the training data
 x_train=[]
@@ -54,6 +47,13 @@ for folder in os.listdir(trainpath):
         x_train.append(img_arr)
         y_train.append(labels[folder])
 
+# Define the labels
+labels={' kajukatli':0,' gulabjamun':1 ,' Kheer’:2 ,' halwa’:3}
+def getcode(n):
+    for x,y in labels.items():
+        if n==y:
+            return x
+
 # Display the training images on your IDE
 plt.figure(figsize=(20,20))
 for n,i in enumerate(list(np.random.randint(0,len(x_train),18))):
@@ -61,6 +61,15 @@ for n,i in enumerate(list(np.random.randint(0,len(x_train),18))):
     plt.imshow(x_train[i])
     plt.axis('off')
     plt.title(getcode(y_train[i]))
+
+# Check the image size of each image files in your datasets for test
+size=[]
+for folder in os.listdir(testpath):
+    files=gb.glob(pathname=str(testpath + '/'+folder + '/*.jpg'))
+    for file in files:
+        image=plt.imread(file)
+        size.append(image.shape)
+pd.Series(size).value_counts()
 
 # Resize the image files to normalize the test data
 x_test=[]
