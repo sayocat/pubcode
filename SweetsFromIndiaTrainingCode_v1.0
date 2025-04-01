@@ -1,0 +1,145 @@
+
+# Python Training Code for “Sweets From India” Image classification  version 1.0.0
+
+# Import necessary library modules and frameworks into Python.
+import numpy as np 
+import pandas as pd 
+import matplotlib.pyplot as plt
+import os 
+import glob as gb
+import cv2
+import tensorflow  as tf 
+import keras
+
+# Check if the machine is ready to use your GPU
+from tensorflow.python.client import device_lib
+print('DEVICES', device_lib.list_local_devices())
+
+# Define the paths to your datasets
+trainpath='./datasets/sweetsfromindia/train'
+testpath='./datasets/sweetsfromindia/test’
+
+# List the number of image files in your datasets
+for folder in os.listdir(trainpath):
+    files=gb.glob(pathname=str(trainpath + '/'+folder + '/*.jpg'))
+    print(f"numbers of images {len(files)} in {folder}")
+for folder in os.listdir(testpath):
+    files=gb.glob(pathname=str(testpath + '/'+folder + '/*.jpg'))
+    print(f"numbers of images {len(files)} in {folder}")
+
+# Check the image size of each image files in your datasets
+size=[]
+for folder in os.listdir(trainpath):
+    files=gb.glob(pathname=str(trainpath + '/'+folder + '/*.jpg'))
+    for file in files:
+        image=plt.imread(file)
+        size.append(image.shape)
+pd.Series(size).value_counts()
+
+# Define the labels
+labels={' kajukatli':0,' gulabjamun':1 ,' Kheer’:2 ,' halwa’:3}
+def getcode(n):
+    for x,y in labels.items():
+        if n==y:
+            return x
+
+# Resize the image files to normalize the training data
+x_train=[]
+y_train=[]
+for folder in os.listdir(trainpath):
+    files=gb.glob(pathname=str(trainpath + '/'+folder + '/*.jpg'))
+    for file in files:
+        image=cv2.imread(file)
+        img_arr=cv2.resize(image,(128,128))
+        x_train.append(img_arr)
+        y_train.append(labels[folder])
+
+# Display the training images on your IDE
+plt.figure(figsize=(20,20))
+for n,i in enumerate(list(np.random.randint(0,len(x_train),18))):
+    plt.subplot(3,6,n+1)
+    plt.imshow(x_train[i])
+    plt.axis('off')
+    plt.title(getcode(y_train[i]))
+
+# Resize the image files to normalize the test data
+x_test=[]
+# y_test=[]
+for folder in os.listdir(testpath):
+    files=gb.glob(pathname=str(testpath + '/'+folder + '/*.jpg'))
+    for file in files:
+        image=cv2.imread(file)
+        img_arr=cv2.resize(image,(128,128))
+        x_test.append(img_arr)
+        # y_test.append(labels[folder])
+
+# Display the test images on your IDE
+plt.figure(figsize=(20,20))
+for n,i in enumerate(list(np.random.randint(0,len(x_test),18))):
+    plt.subplot(3,6,n+1)
+    plt.imshow(cv2.cvtColor(x_test[i], cv2.COLOR_BGR2RGB))
+    plt.axis('off')
+    plt.title(getcode(‘all’))
+
+# Check the size and the number of normalized data
+x_train = np.array(x_train)
+x_test = np.array(x_test)
+y_train = np.array(y_train)
+# y_test = np.array(y_test)
+print(f'X_train shape  is {x_train.shape}')
+print(f'X_test shape  is {x_test.shape}')
+print(f'y_train shape  is {y_train.shape}’)
+# print(f'y_test shape  is {y_test.shape}')
+
+# Define the training algorythm
+sweets=keras.models.Sequential([
+    keras.layers.Conv2D(200,kernel_size=(3,3),activation='relu',input_shape=(128,128,3)),
+    keras.layers.MaxPool2D((4,4)),
+    keras.layers.Conv2D(120,kernel_size=(3,3),activation='relu'),
+    keras.layers.MaxPool2D((4,4)),
+    keras.layers.Conv2D(50,kernel_size=(3,3),activation='relu'),
+    keras.layers.MaxPool2D((4,4)),
+    keras.layers.Flatten(),
+    keras.layers.Dense(120,activation='relu'),
+    keras.layers.Dense(100,activation='relu'),
+    keras.layers.Dense(50,activation='relu'),
+    keras.layers.Dropout(rate=0.5),
+    keras.layers.Dense(4,activation='softmax'),
+ 
+])
+
+
+# Display the summary of the model
+sweets.summary()
+
+# Compile the model
+sweets.compile(optimizer='adam',
+             loss='sparse_categorical_crossentropy',
+             metrics=['accuracy’])
+
+# Kick of the training then wait until the training completes
+sweets.fit(x_train, y_train, epochs=10, batch_size=64)
+
+# Evaluate the model
+sweets.evaluate(x_train, y_train)
+
+# Make sure to save the model
+sweets.save(‘./models/sweetsfromindia.keras')
+
+# Get prediction ready
+y_pred = sweets.predict(x_test)
+
+# Select the image test file to perform online prediction
+y_pred = [4]
+
+# Display the test image and get prediction together
+
+
+
+
+
+
+
+
+
+# Author : Yoshiharu Sato
