@@ -103,17 +103,19 @@ print(f'y_train shape  is {y_train.shape}')
 # print(f'y_test shape  is {y_test.shape}')
 
 # Define the training algorythm
-sweets=keras.models.Sequential([
-    keras.layers.Conv2D(200,kernel_size=(3,3),activation='relu',input_shape=(128,128,3)),
-    keras.layers.MaxPool2D((4,4)),
-    keras.layers.Conv2D(120,kernel_size=(3,3),activation='relu'),
-    keras.layers.MaxPool2D((4,4)),
-    keras.layers.Conv2D(50,kernel_size=(3,3),activation='relu'),
-    keras.layers.MaxPool2D((4,4)),
+sweets = keras.models.Sequential([
+    keras.layers.Conv2D(16,kernel_size=(3,3),activation='relu',input_shape=(128,128,3)),
+    keras.layers.Conv2D(32,kernel_size=(3,3),activation='relu'),
+    keras.layers.MaxPool2D((2,2)),
+    keras.layers.Conv2D(64,kernel_size=(3,3),activation='relu'),
+    keras.layers.MaxPool2D((2,2)),
+    keras.layers.Conv2D(128,kernel_size=(3,3),activation='relu'),
+    keras.layers.MaxPool2D((2,2)),
     keras.layers.Flatten(),
+    keras.layers.Dense(240,activation='relu'),
+    keras.layers.Dense(160,activation='relu'),
     keras.layers.Dense(120,activation='relu'),
-    keras.layers.Dense(100,activation='relu'),
-    keras.layers.Dense(50,activation='relu'),
+    keras.layers.Dense(80,activation='relu'),
     keras.layers.Dropout(rate=0.5),
     keras.layers.Dense(4,activation='softmax'),
  
