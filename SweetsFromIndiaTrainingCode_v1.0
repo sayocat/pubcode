@@ -151,14 +151,14 @@ y_pred = sweets.predict(x_test)
 y_pred[0]
 
 # Display the test image and get prediction together
-labels=['gulab_jamun0', 'halwa1', 'kaju_katli2', 'kheer3']
-image_number = 44
+labels=['gulab_jamun', 'halwa', 'kaju_katli', 'kheer']
+image_number = 0
 plt.imshow(cv2.cvtColor(x_test[image_number], cv2.COLOR_BGR2RGB))
 predicted_label = labels[np.argmax(y_pred[image_number])]
 print("Predicted label is {}".format(predicted_label))
 
 from keras.models import load_model
-sweets = load_model('./models/sfi_test.keras')
+sweets = load_model('./models/sweetsfromindia.keras')
 
 
 
